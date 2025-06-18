@@ -277,11 +277,7 @@ public class Prueba {
 		matriz = pr.colocarPuntuacion(matriz);
 		
 		
-		for (int i = 120; i < 180; i++) {
-			for (int j = 50; j < 350; j++) {
-				matriz[i][j]=-1;
-			}
-		}
+		
 		
 		for (int i = 220; i < 935; i++) {
 			for (int j = 75; j < 595; j++) {
@@ -309,9 +305,16 @@ public class Prueba {
 			e.printStackTrace();
 		}
 
-//		matriz = pr.colocarImagenPieza(matriz, matrizFicha);
-	
-		
+		//matriz = pr.colocarImagenPieza(matriz, matrizFicha);
+		for (int i = 120; i < 180; i++) {
+			for (int j = 50; j < 350; j++) {
+				matriz[i][j]=pr.getMatrizTableroVacio()[i][j];
+			}
+		}
+		pr.puntuacion=454;
+		matriz = pr.colocarPuntuacion(matriz);
+		img.setArray2D(pr.getMatrizTablero());
+		img.ver();
 		System.out.println("holaaaaa");
 	}
 }

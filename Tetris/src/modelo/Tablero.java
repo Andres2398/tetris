@@ -37,7 +37,7 @@ public class Tablero {
 			}
 			y++;
 		}
-
+		pintar();
 		return true;
 	}
 
@@ -74,31 +74,6 @@ public class Tablero {
 		colocarFicha(); // Siempre se recoloca
 
 		return sePudoMover;
-	}
-
-	private void moverDerecha() {
-		for (int i = 0; i < matrizFichaActual.length; i++) {
-			for (int j = 0; j < matrizFichaActual[0].length; j++) {
-				if (matrizFichaActual[i][j]) {
-					int xActual = posicionLogicaX + j;
-					int yActual = posicionLogicaY + i;
-					tableroJuego[yActual][xActual] = false;
-				}
-			}
-		}
-
-		posicionLogicaX++;
-
-		for (int i = 0; i < matrizFichaActual.length; i++) {
-			for (int j = 0; j < matrizFichaActual[0].length; j++) {
-				if (matrizFichaActual[i][j]) {
-					int xNuevo = posicionLogicaX + j;
-					int yNuevo = posicionLogicaY + i;
-					tableroJuego[yNuevo][xNuevo] = true;
-				}
-			}
-		}
-
 	}
 
 	private void pintar() {
@@ -200,21 +175,6 @@ public class Tablero {
 		return sePudoMover;
 	}
 
-	private void moverIzquierda() {
-		posicionLogicaX--; // Mover una columna a la izquierda
-
-		for (int i = 0; i < matrizFichaActual.length; i++) {
-			for (int j = 0; j < matrizFichaActual[0].length; j++) {
-				if (matrizFichaActual[i][j]) {
-					int xNuevo = posicionLogicaX + j;
-					int yNuevo = posicionLogicaY + i;
-					tableroJuego[yNuevo][xNuevo] = true;
-				}
-			}
-		}
-		ComprobarMoverAbajo();
-	}
-
 	public void limpiarFichaActual() {
 		for (int i = 0; i < matrizFichaActual.length; i++) {
 			for (int j = 0; j < matrizFichaActual[0].length; j++) {
@@ -268,7 +228,6 @@ public class Tablero {
 						return false;
 					}
 
-					
 					if (tableroJuego[yTablero][xTablero]) {
 						System.out.println("es aqui3");
 						return false;
@@ -279,57 +238,12 @@ public class Tablero {
 		return true;
 	}
 
-	public boolean rotarDerecha() {
-
-		boolean[][] rotada = rotarMatrizDerecha(getMatrizFichaActual());
-
-		if (puedeRotarFicha(rotada)) {
-			limpiarFichaActual();
-			setMatrizFichaActual(rotada);
-			colocarFicha();
-			return true;
-		} else {
-			for (int dx = -1; dx <= 1; dx += 2) {
-				setPosicionLogicaX(posicionLogicaX + dx);
-				if (puedeRotarFicha(rotada)) {
-					limpiarFichaActual();
-					setMatrizFichaActual(rotada);
-					colocarFicha();
-					pintar();
-					return true;
-				}
-				setPosicionLogicaX(posicionLogicaX - dx);
-			}
-			return false;
-		}
-	}
-
 	public int getPosicionLogicaX() {
 		return posicionLogicaX;
 	}
 
 	public void setPosicionLogicaX(int posicionLogicaX) {
 		this.posicionLogicaX = posicionLogicaX;
-	}
-
-	private boolean[][] rotarMatrizDerecha(boolean[][] matrizFichaActual) {
-
-		System.out.println("inicio");
-
-		boolean[][] rotada = new boolean[matrizFichaActual[0].length][matrizFichaActual.length];
-		int k = matrizFichaActual.length - 1;
-		for (int i = 0; i < matrizFichaActual.length; i++) {
-			System.out.println("aaaa");
-			for (int j = 0; j < matrizFichaActual[0].length; j++) {
-				rotada[j][k] = matrizFichaActual[i][j];
-			}
-			k--;
-		}
-
-		System.out.println("fin");
-
-		return rotada;
-
 	}
 
 	public boolean[][] getTableroJuego() {
@@ -342,6 +256,55 @@ public class Tablero {
 
 	public boolean[][] getMatrizFichaActual() {
 		return matrizFichaActual;
+	}
+
+	public int[] comprobarLinea() {
+		int[] quitarLineas = new int[4];
+		for (int i = 0; i < quitarLineas.length; i++) {
+			quitarLineas[i] = -1;
+		}
+
+		int contadorTrue = 0;
+		int k = 0;
+
+		for (int i = tableroJuego.length - 1; i >= 0; i--) {
+
+			contadorTrue = 0;
+			for (int j = tableroJuego[0].length - 1; j >= 0; j--) {
+				if (tableroJuego[i][j])
+					contadorTrue++;
+			}
+			if (contadorTrue == tableroJuego[0].length) {
+				quitarLineas[k] = i;
+				k++;
+
+			}
+
+		}
+		return quitarLineas;
+	}
+
+	public void eliminarLinea(int fila) {
+		// Mover cada fila superior hacia abajo
+		for (int i = fila; i > 0; i--) {
+			for (int j = 0; j < tableroJuego[0].length; j++) {
+				tableroJuego[i][j] = tableroJuego[i - 1][j];
+			}
+		}
+		// Limpiar la fila superior (ya desplazada)
+		for (int j = 0; j < tableroJuego[0].length; j++) {
+			tableroJuego[0][j] = false;
+		}
+		pintar();
+	}
+
+	public boolean fin() {
+
+		if (tableroJuego[2][4] || tableroJuego[2][5])
+			return true;
+		else
+			return false;
+	
 	}
 
 }

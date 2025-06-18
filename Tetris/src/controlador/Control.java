@@ -13,17 +13,21 @@ public class Control {
 	}
 
 	public void start() {
-
+		//se que hay metodos que sobran los tengo para probar cosas 
 		interfaz.saludo();
 		interfaz.iniciarImagen();
 		int matrizImagen[][] = interfaz.getMatrizImagenJuego();
-		logica.copiarMatrizImagen(interfaz.getMatrizImagenJuego());
+		//aqui se copia la imagen del tablero para tener uno vacio
+		logica.copiarMatrizImagen(matrizImagen);
 		boolean fin = false;
 		while (!fin) {
+			// aqui se borra la puntuacion
 			matrizImagen = logica.borrarPuntuacion(matrizImagen);
+			// aqui se establece la puntuacion
 			interfaz.setMatrizImagenJuego(matrizImagen);
+			interfaz.setPuntuacion(logica.getPuntuacion());
+			// aqui se pinta la puntuacion
 			interfaz.pintarPuntuacion();
-
 			int matrizPieza[][] = interfaz.elegirPiezaRandom();
 			logica.iniciarNuevaPieza(matrizPieza, interfaz.getMatrizBoolean());
 
@@ -33,40 +37,45 @@ public class Control {
 			interfaz.repintarImagen(matrizImagen);
 
 			boolean piezaColocada = false;
-
+			String movimiento="";
 			while (!piezaColocada) {
 				matrizImagen = logica.borrarPieza(matrizImagen);
 				interfaz.setMatrizImagenJuego(matrizImagen);
 
-				String movimiento = interfaz.pedirMovimientos();
+				movimiento = interfaz.pedirMovimientos();
 
 				if (logica.isPiezaFija()) {
 					piezaColocada = true;
 
 				} else {
 
-					switch (movimiento.toLowerCase()) {
+					switch (movimiento) {
 					case "a":
+					case "A":	
 						logica.moverIzquierda(matrizImagen);
 						break;
 					case "d":
+					case "D":
 						logica.moverDerecha(matrizImagen);
 						break;
 					case "x":
-						logica.rotarIzquierda();
-
-						logica.moverAbajo(matrizImagen);
+					case "X":
+						logica.rotarIzquierda(matrizImagen);
 						break;
-					case "c": // Rotar derecha
-
+					case "c":
+					case "C":
 						logica.rotarDerecha(matrizImagen);
-
 						break;
-					case "s": // Mover abajo explícitamente
+					case "s":
+					case "S":
 						if (!logica.moverAbajo(matrizImagen)) {
 							piezaColocada = true;
 							logica.colocarFichaTableroInterno(interfaz.getMatrizBoolean());
 						}
+						break;
+					case "t":
+					case "T":
+						piezaColocada = true;
 						break;
 					}
 
@@ -84,6 +93,17 @@ public class Control {
 					interfaz.repintarImagen(matrizImagen);
 				}
 			}
+			// no es lo mejor pero es la uncia forma que he conseguido
+			// que se eliminen varias lineas a la vez
+			matrizImagen = logica.comprobarLinea(matrizImagen);
+			matrizImagen = logica.comprobarLinea(matrizImagen);
+			matrizImagen = logica.comprobarLinea(matrizImagen);
+			matrizImagen = logica.comprobarLinea(matrizImagen);
+			interfaz.repintarImagen(matrizImagen);
+			fin = logica.comprobarFin();
+			if(movimiento.equals("t")||movimiento.equals("T"))
+				fin=true;
 		}
+		interfaz.despedida();
 	}
 }
