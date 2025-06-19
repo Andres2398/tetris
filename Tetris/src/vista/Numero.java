@@ -1,5 +1,7 @@
 package vista;
-
+/**
+ * Clase enum con todos los posibles numeros para la puntuacion 
+ */
 public enum Numero {
 	NUMERO0("./img/Numeros/numero0.png"),
 	NUMERO1("./img/Numeros/numero1.png"),
@@ -13,12 +15,18 @@ public enum Numero {
 	NUMERO9("./img/Numeros/numero9.png");
 
 	private final Imagen imagen;
-
+	/**
+	 * Constructor del numero
+	 * @param ruta de la imagen 
+	 */
 	Numero(String ruta) {
 		this.imagen = new Imagen(ruta);
 		imagen.cerrar();
 	}
-
+	/**
+	 * Metodo para recibir la imagen del numero
+	 * @return retorna la imagen 
+	 */
 	public Imagen getImagen() {
 		
 		return imagen;

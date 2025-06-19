@@ -1,5 +1,11 @@
 package modelo;
 
+/**
+ * Clase interfaz que se dedica a la comunicacion con el usuario y a la
+ * comunicacion con las clases imagen, Numero y Pieza para ir mostrandoselas al
+ * usuario
+ * 
+ */
 public class Tablero {
 	private boolean tableroJuego[][];
 	private boolean[][] matrizFichaActual;
@@ -9,58 +15,81 @@ public class Tablero {
 	private final static int POSICIONINICIOX = 4;
 	private final static int POSICIONINICIOY = 0;
 
+	/**
+	 * Constructor de la clase interfaz en el que iniciamos el scanner la columna
+	 * donde se colocara la puntuacion y la puntuacion que empezará a 0
+	 */
 	public Tablero() {
 		tableroJuego = new boolean[14][10];
 		posicionLogicaX = POSICIONINICIOX;
 		posicionLogicaY = POSICIONINICIOY;
 	}
 
+	// geters/setters
+	/**
+	 * metodo para obtener la matriz booleana de la pieza
+	 * 
+	 * @return matriz boolean
+	 */
 	public void setMatrizFichaActual(boolean[][] matrizFicha) {
 		this.matrizFichaActual = matrizFicha;
 	}
-
+	/**
+	 * Metodo para resetear las posiciones al iniciar una nueva pieza
+	 */
 	public void setPosicionInicial() {
 		this.posicionLogicaX = POSICIONINICIOX;
 		this.posicionLogicaY = POSICIONINICIOY;
 	}
+	
+	/**
+	 * Metodo para obtener la matriz de booleanos con la que se esta jugando
+	 * @return la matriz booleana actual de la pieza
+	 */
 
-	public boolean colocarFicha() {
+	public boolean[][] getMatrizFichaActual() {
+		return matrizFichaActual;
+	}
+	
+	/**
+	 * Metodo para colocar la ficha en el tablero 
+	 * 
+	 */
+	public void colocarFicha() {
 		int y = posicionLogicaY;
 		for (int i = 0; i < matrizFichaActual.length; i++) {
 			int x = posicionLogicaX;
 			for (int j = 0; j < matrizFichaActual[0].length; j++) {
-				if (matrizFichaActual[i][j]) {
+				if (matrizFichaActual[i][j])
 					tableroJuego[y][x] = true;
-				}
-
 				x++;
 			}
 			y++;
 		}
-		pintar();
-		return true;
-	}
+	
 
+	}
+	/**
+	 * metodo para comprobar si se puede mover una ficha a la derecha 
+	 * @return true si se puede mover false si no
+	 */
 	public boolean ComprobarMoverDerecha() {
 		int nuevaPosX = posicionLogicaX + 1;
-		int anchoFicha = matrizFichaActual[0].length;
-		int anchoTablero = tableroJuego[0].length;
 
-		limpiarFichaActual(); // Limpia temporalmente
-
+		limpiarFichaActual();
 		boolean sePudoMover = true;
 
-		if (nuevaPosX + anchoFicha > anchoTablero) {
+		if (nuevaPosX + matrizFichaActual[0].length > tableroJuego[0].length) {
 			sePudoMover = false;
 		} else {
 			for (int i = 0; i < matrizFichaActual.length; i++) {
 				for (int j = 0; j < matrizFichaActual[0].length; j++) {
-					if (matrizFichaActual[i][j]) {
+					if (matrizFichaActual[i][j] && sePudoMover) {
 						int xTablero = nuevaPosX + j;
 						int yTablero = posicionLogicaY + i;
 						if (tableroJuego[yTablero][xTablero]) {
 							sePudoMover = false;
-							break;
+
 						}
 					}
 				}
@@ -71,22 +100,14 @@ public class Tablero {
 			posicionLogicaX = nuevaPosX;
 		}
 
-		colocarFicha(); // Siempre se recoloca
+		colocarFicha();
 
 		return sePudoMover;
 	}
-
-	private void pintar() {
-		for (int i = 0; i < tableroJuego.length; i++) {
-			System.out.println();
-			for (int j = 0; j < tableroJuego[0].length; j++) {
-				System.out.print("{" + tableroJuego[i][j] + "}");
-			}
-		}
-		System.out.println();
-		System.out.println();
-	}
-
+	/**
+	 * metodo para comprobar si se puede mover una ficha hacia abajo 
+	 * @return true si se puede mover false si no
+	 */
 	public boolean ComprobarMoverAbajo() {
 		int nuevaPosY = posicionLogicaY + 1;
 
@@ -125,10 +146,12 @@ public class Tablero {
 		return true;
 
 	}
-
+	/**
+	 * Mueve la ficha hacia abajo 
+	 */
 	private void moverAbajo() {
 		limpiarFichaActual();
-		posicionLogicaY++; // Baja una fila
+		posicionLogicaY++;
 
 		for (int i = 0; i < matrizFichaActual.length; i++) {
 			for (int j = 0; j < matrizFichaActual[0].length; j++) {
@@ -139,9 +162,12 @@ public class Tablero {
 				}
 			}
 		}
-		pintar();
-	}
 
+	}
+	/**
+	 * metodo para comprobar si se puede mover una ficha a la izquierda 
+	 * @return true si se puede mover false si no
+	 */
 	public boolean ComprobarMoverIzquierda() {
 		int nuevaPosX = posicionLogicaX - 1;
 
@@ -154,39 +180,41 @@ public class Tablero {
 		} else {
 			for (int i = 0; i < matrizFichaActual.length; i++) {
 				for (int j = 0; j < matrizFichaActual[0].length; j++) {
-					if (matrizFichaActual[i][j]) {
+					if (matrizFichaActual[i][j] && sePudoMover) {
 						int xTablero = nuevaPosX + j;
 						int yTablero = posicionLogicaY + i;
-						if (xTablero < 0 || tableroJuego[yTablero][xTablero]) {
+						if (xTablero < 0 || tableroJuego[yTablero][xTablero])
 							sePudoMover = false;
-							break;
-						}
+
 					}
 				}
 			}
 		}
 
-		if (sePudoMover) {
+		if (sePudoMover)
 			posicionLogicaX = nuevaPosX;
-		}
 
-		colocarFicha(); // Siempre recoloca
+		colocarFicha();
 
 		return sePudoMover;
 	}
-
+	/**
+	 * Metodo que se llama para limpiar la ficha actual de la matriz en este caso la ponemos
+	 * todo a false donde estaba la ficha
+	 */
 	public void limpiarFichaActual() {
 		for (int i = 0; i < matrizFichaActual.length; i++) {
 			for (int j = 0; j < matrizFichaActual[0].length; j++) {
-				if (matrizFichaActual[i][j]) {
-					int x = posicionLogicaX + j;
-					int y = posicionLogicaY + i;
-					tableroJuego[y][x] = false;
-				}
+				if (matrizFichaActual[i][j])
+					tableroJuego[posicionLogicaY + i][posicionLogicaX + j] = false;
+
 			}
 		}
 	}
-
+	/**
+	 * Metodo para saber si hay colisiones debajo de la ficha
+	 * @return true si hay, false si no hay
+	 */
 	public boolean hayColisionDebajo() {
 
 		for (int i = 0; i < matrizFichaActual.length; i++) {
@@ -195,24 +223,26 @@ public class Tablero {
 					int xTablero = posicionLogicaX + j;
 					int yTablero = posicionLogicaY + i;
 
-					// Ver si estamos en la última fila
 					if (yTablero + 1 >= tableroJuego.length) {
-						return true; // Colisión con el fondo
+						return true;
 					}
 
-					// Solo verificar debajo si la celda siguiente está libre en la ficha
 					if (i == matrizFichaActual.length - 1 || !matrizFichaActual[i + 1][j]) {
 						if (tableroJuego[yTablero + 1][xTablero]) {
-							return true; // Colisión con una ficha fija abajo
+							return true;
 						}
 					}
 				}
 			}
 		}
 
-		return false; // No hay colisión abajo
+		return false;
 	}
-
+	/**
+	 * Metodo para saber si se puede rotar una ficha
+	 * @param nuevaMatriz la matriz rotada 
+	 * @return true si se puede colocar la matriz rotada o no
+	 */
 	public boolean puedeRotarFicha(boolean[][] nuevaMatriz) {
 		limpiarFichaActual();
 		for (int i = 0; i < nuevaMatriz.length; i++) {
@@ -221,43 +251,27 @@ public class Tablero {
 					int xTablero = posicionLogicaX + j;
 					int yTablero = posicionLogicaY + i;
 
-					// ¿Está fuera del tablero?
+					
 					if (xTablero < 0 || xTablero >= tableroJuego[0].length || yTablero < 0
-							|| yTablero >= tableroJuego.length) {
-						System.out.println("es aqui2");
-						return false;
-					}
+							|| yTablero >= tableroJuego.length)
 
-					if (tableroJuego[yTablero][xTablero]) {
-						System.out.println("es aqui3");
 						return false;
-					}
+
+					if (tableroJuego[yTablero][xTablero])
+
+						return false;
+
 				}
 			}
 		}
 		return true;
 	}
 
-	public int getPosicionLogicaX() {
-		return posicionLogicaX;
-	}
-
-	public void setPosicionLogicaX(int posicionLogicaX) {
-		this.posicionLogicaX = posicionLogicaX;
-	}
-
-	public boolean[][] getTableroJuego() {
-		return tableroJuego;
-	}
-
-	public void setTableroJuego(boolean[][] tableroJuego) {
-		this.tableroJuego = tableroJuego;
-	}
-
-	public boolean[][] getMatrizFichaActual() {
-		return matrizFichaActual;
-	}
-
+	
+	/**
+	 * Metodo para comprobar si una linea esta llena y asi borrarla
+	 * @return un array con las lineas que pueden estar llenas si no es -1
+	 */
 	public int[] comprobarLinea() {
 		int[] quitarLineas = new int[4];
 		for (int i = 0; i < quitarLineas.length; i++) {
@@ -283,28 +297,34 @@ public class Tablero {
 		}
 		return quitarLineas;
 	}
-
+	/**
+	 * metodo para eliminar la llena y bajar las de arriba, tambien borra la primera linea siempre
+	 * ya que a veces se quedaba en true 
+	 * @param fila que se quiere eliminar 
+	 */
 	public void eliminarLinea(int fila) {
-		// Mover cada fila superior hacia abajo
 		for (int i = fila; i > 0; i--) {
 			for (int j = 0; j < tableroJuego[0].length; j++) {
 				tableroJuego[i][j] = tableroJuego[i - 1][j];
 			}
 		}
-		// Limpiar la fila superior (ya desplazada)
+		
 		for (int j = 0; j < tableroJuego[0].length; j++) {
 			tableroJuego[0][j] = false;
 		}
-		pintar();
+	
 	}
-
+	/**
+	 * Metodo para comprobar si se ha acabado el juego
+	 * @return true si si, false si no
+	 */
 	public boolean fin() {
 
 		if (tableroJuego[2][4] || tableroJuego[2][5])
 			return true;
 		else
 			return false;
-	
+
 	}
 
 }

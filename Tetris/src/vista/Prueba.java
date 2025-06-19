@@ -1,9 +1,7 @@
 package vista;
 
 import java.util.Random;
-import java.util.concurrent.ForkJoinPool;
 
-import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 public class Prueba {
 	int puntuacion;
@@ -279,9 +277,9 @@ public class Prueba {
 		
 		
 		
-		for (int i = 220; i < 935; i++) {
-			for (int j = 75; j < 595; j++) {
-				
+		for (int i = 85; i < 190; i++) {
+			for (int j = 440; j < 565; j++) {
+				matriz[i][j]=-1;
 			}
 		}
 		

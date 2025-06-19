@@ -15,11 +15,11 @@ public class Logica {
 	/**
 	 * Constructor que inicializa el tablero y el sistema de borrado
 	 */
-		public Logica() {
-			tablero = new Tablero();
-			borrar = new Borrados();
-			puntuacion=0;
-		}
+	public Logica() {
+		tablero = new Tablero();
+		borrar = new Borrados();
+		puntuacion = 0;
+	}
 
 	// getters/setters
 	/**
@@ -369,6 +369,23 @@ public class Logica {
 		return rotada;
 	}
 
+	public int[][] borrarPiezaPequena(int[][] matrizJuego) {
+		return borrar.borrarPiezaPequena(matrizJuego);
+	}
+	public int[][] pintarPiezaPequena(int[][] piezaPequena, int[][] matrizJuego){
+		int y=85;
+		for (int i = 0; i < piezaPequena.length; i++) {
+			int x=440;
+			for (int j = 0; j < piezaPequena[0].length; j++) {
+				matrizJuego[y][x] = piezaPequena[i][j];
+				x++;
+			}
+			y++;
+		}
+		
+		
+		return matrizJuego;
+	}
 	/**
 	 * Comprueba si se ha completado alguna línea y la elimina.
 	 * 
@@ -385,26 +402,27 @@ public class Logica {
 					int aux = quitarLineas[i];
 					quitarLineas[i] = quitarLineas[i + 1];
 					quitarLineas[i + 1] = aux;
-					cambio=true;
+					cambio = true;
 				}
 			}
 		}
 		for (int i = 0; i < quitarLineas.length; i++) {
-			if(quitarLineas[i]!=-1) {
+			if (quitarLineas[i] != -1) {
 				tablero.eliminarLinea(quitarLineas[i]);
 				borrar.eliminarLinea(quitarLineas[i], matrizJuego);
-				puntuacion+=10;
+				puntuacion += 10;
 			}
 		}
 		return matrizJuego;
 	}
+
 	/**
-     * Comprueba si el juego ha llegado a su fin.
-     * @return true si el juego ha terminado.
-     */
+	 * Comprueba si el juego ha llegado a su fin.
+	 * 
+	 * @return true si el juego ha terminado.
+	 */
 	public boolean comprobarFin() {
-		
+
 		return tablero.fin();
 	}
 }
-

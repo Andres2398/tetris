@@ -2,33 +2,47 @@ package controlador;
 
 import modelo.Logica;
 import vista.Interfaz;
-
+/**
+ * Clase Control que se dedica al control del flujo de juego
+ */
 public class Control {
 	Logica logica;
 	Interfaz interfaz;
-
+	/**
+	 * Constructor de la clase control
+	 */
 	public Control() {
 		logica = new Logica();
 		interfaz = new Interfaz();
 	}
-
+	/**
+	 * Metodo que se dedica al control del juego
+	 */
 	public void start() {
-		//se que hay metodos que sobran los tengo para probar cosas 
+		
 		interfaz.saludo();
 		interfaz.iniciarImagen();
 		int matrizImagen[][] = interfaz.getMatrizImagenJuego();
-		//aqui se copia la imagen del tablero para tener uno vacio
+	
 		logica.copiarMatrizImagen(matrizImagen);
+		interfaz.inicializarFuturaPieza();
 		boolean fin = false;
 		while (!fin) {
-			// aqui se borra la puntuacion
+			
+	
+			
+			interfaz.cambioDePieza();
+			int[][]piezaPequena=interfaz.elegirFuturaPieza();
+			matrizImagen=logica.pintarPiezaPequena(piezaPequena, matrizImagen);
 			matrizImagen = logica.borrarPuntuacion(matrizImagen);
+			
 			// aqui se establece la puntuacion
+			interfaz.repintarImagen(matrizImagen);
 			interfaz.setMatrizImagenJuego(matrizImagen);
 			interfaz.setPuntuacion(logica.getPuntuacion());
 			// aqui se pinta la puntuacion
 			interfaz.pintarPuntuacion();
-			int matrizPieza[][] = interfaz.elegirPiezaRandom();
+			int matrizPieza[][] = interfaz.elegirPieza();
 			logica.iniciarNuevaPieza(matrizPieza, interfaz.getMatrizBoolean());
 
 			matrizImagen = logica.coloCarPieza(interfaz.getMatrizImagenJuego(), matrizPieza);
@@ -90,8 +104,14 @@ public class Control {
 
 					}
 					matrizImagen = logica.pintarFicha(matrizImagen);
+					try {
+						Thread.sleep(300);
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
 					interfaz.repintarImagen(matrizImagen);
 				}
+				
 			}
 			// no es lo mejor pero es la uncia forma que he conseguido
 			// que se eliminen varias lineas a la vez
@@ -99,10 +119,13 @@ public class Control {
 			matrizImagen = logica.comprobarLinea(matrizImagen);
 			matrizImagen = logica.comprobarLinea(matrizImagen);
 			matrizImagen = logica.comprobarLinea(matrizImagen);
+			matrizImagen=logica.borrarPiezaPequena(matrizImagen);
 			interfaz.repintarImagen(matrizImagen);
+			
 			fin = logica.comprobarFin();
 			if(movimiento.equals("t")||movimiento.equals("T"))
 				fin=true;
+			
 		}
 		interfaz.despedida();
 	}

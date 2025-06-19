@@ -1,30 +1,49 @@
 package modelo;
 
+/**
+ * Clase dedicada a borrar partes del tablero de la matriz de la imagen
+ */
 public class Borrados {
 	private int[][] matrizJuegoBase;
 	private int posicionFichaBorrarX;
 	private int posicionFichaBorrarY;
 
-	public int getPosicionFichaBorrarX() {
-		return posicionFichaBorrarX;
-	}
-
+	// Getters/Setters
+	/**
+	 * Metood para establecer la posicion de las columnas desde la que borrar
+	 * 
+	 * @param posicionFichaBorrarX int que representa la posicion desde la que
+	 *                             borrar
+	 */
 	public void setPosicionFichaBorrarX(int posicionFichaBorrarX) {
 		this.posicionFichaBorrarX = posicionFichaBorrarX;
 	}
 
-	public int getPosicionFichaBorrarY() {
-		return posicionFichaBorrarY;
-	}
-
+	/**
+	 * Metood para establecer la posicion de las fila desde la que borrar
+	 * 
+	 * @param posicionFichaBorrarY int que representa la posicion desde la que
+	 *                             borrar
+	 */
 	public void setPosicionFichaBorrarY(int posicionFichaBorrarY) {
 		this.posicionFichaBorrarY = posicionFichaBorrarY;
 	}
 
+	/**
+	 * Metood para establecer la matriz vacia del tablero para asi poder borrar
+	 * 
+	 * @param matrizJuegoBase matriz de pixeles vacio
+	 */
 	public void setMatrizJuegoBase(int[][] matrizJuegoBase) {
 		this.matrizJuegoBase = matrizJuegoBase;
 	}
 
+	/**
+	 * Metodo para borrar la puntuacion
+	 * 
+	 * @param matrizImagen matriz de la imagen con la que se esta jugando
+	 * @return la matriz imagen con los pixeles de la puntuacion borrados
+	 */
 	public int[][] borrarPuntuacion(int[][] matrizImagen) {
 		for (int i = 120; i < 180; i++) {
 			for (int j = 20; j < 350; j++) {
@@ -36,7 +55,22 @@ public class Borrados {
 		return matrizImagen;
 	}
 
-	// Borra la pieza en su última posición conocida
+	public int[][] borrarPiezaPequena(int[][] matrizImagen) {
+		for (int i = 85; i < 190; i++) {
+			for (int j = 440; j < 565; j++) {
+				matrizImagen[i][j] = matrizJuegoBase[i][j];
+			}
+		}
+		return matrizImagen;
+	}
+
+	/**
+	 * Borra la pieza en su ultima posicion
+	 * 
+	 * @param matrizFicha matriz de int con los pixeles de la ficha
+	 * @param matrizJuego matriz de int con los pixeles de toda la imagen
+	 * @return matriz de la imagen con la pieza borrada
+	 */
 	public int[][] borrarPieza(int[][] matrizFicha, int[][] matrizJuego) {
 		for (int i = 0; i < matrizFicha.length; i++) {
 			for (int j = 0; j < matrizFicha[0].length; j++) {
@@ -49,44 +83,50 @@ public class Borrados {
 		return matrizJuego;
 	}
 
-	public int[][] eliminarLinea(int filaLogica, int[][] matrizImagenJuego) {
-		final int pixelesPorFila = 51;
-		final int offsetY = 223;
-		final int offsetX = 75;
-		final int ancho = 595 - offsetX;
+	/**
+	 * Meotdo para borrar la linea actual y bajar las demas hacia abajo
+	 * 
+	 * @param fila              que se quiere borrar
+	 * @param matrizImagenJuego matriz de la imagen de juego
+	 * @return matriz de la imgaen de juego con las filas ya borradas y bajadas
+	 */
+	public int[][] eliminarLinea(int fila, int[][] matrizImagenJuego) {
+		int pixelesPorFila = 51;
+		int desfaseY = 223;
+		int desfaseX = 75;
+		int ancho = 595 - desfaseX;
 
 		int totalFilasPixeles = matrizImagenJuego.length;
 		int totalColumnas = matrizImagenJuego[0].length;
 
-		// Calcular la fila en píxeles donde empieza la fila lógica a eliminar
-		int filaPixelesInicio = offsetY + filaLogica * pixelesPorFila;
-		
-		//COMPLEJO ME HA LLEVADO VARIAS HORAS NO TOCAR YA FUNCIONA, EXPLICADO PARA QUE NO SE ME OLVIDE:
+		int filaPixelesInicio = desfaseY + fila * pixelesPorFila;
+
+		// COMPLEJO ME HA LLEVADO VARIAS HORAS NO TOCAR YA FUNCIONA, EXPLICADO PARA QUE
+		// NO SE ME OLVIDE:
 		// Mover hacia abajo todas las filas que están ARRIBA de la fila
 		// eliminada
 		// Empezamos desde la fila que se va a eliminar y vamos hacia arriba
-		for (int filaDestino = filaPixelesInicio; filaDestino >= offsetY
-				+ pixelesPorFila; filaDestino -= pixelesPorFila) {
-			int filaOrigen = filaDestino - pixelesPorFila;
+		for (int i = filaPixelesInicio; i >= desfaseY + pixelesPorFila; i -= pixelesPorFila) {
+			int filaOrigen = i - pixelesPorFila;
 
 			// Copiar todos pixeles de esa fila
-			for (int pixelY = 0; pixelY < pixelesPorFila; pixelY++) {
-				int yDestino = filaDestino + pixelY;
-				int yOrigen = filaOrigen + pixelY;
+			for (int j = 0; j < pixelesPorFila; j++) {
+				int yDestino = i + j;
+				int yOrigen = filaOrigen + j;
 
-				if (yOrigen >= offsetY && yDestino < totalFilasPixeles) {
-					for (int x = offsetX; x < offsetX + ancho && x < totalColumnas; x++) {
+				if (yOrigen >= desfaseY && yDestino < totalFilasPixeles) {
+					for (int x = desfaseX; x < desfaseX + ancho && x < totalColumnas; x++) {
 						matrizImagenJuego[yDestino][x] = matrizImagenJuego[yOrigen][x];
 					}
 				}
 			}
 		}
-		
-		//Limpiar la fila superior con el fondo base
-		for (int pixelY = 0; pixelY < pixelesPorFila; pixelY++) {
-			int y = offsetY + pixelY;
+
+		// Limpiar la fila superior con el fondo base
+		for (int j = 0; j < pixelesPorFila; j++) {
+			int y = desfaseY + j;
 			if (y < totalFilasPixeles) {
-				for (int x = offsetX; x < offsetX + ancho && x < totalColumnas; x++) {
+				for (int x = desfaseX; x < desfaseX + ancho && x < totalColumnas; x++) {
 					matrizImagenJuego[y][x] = matrizJuegoBase[y][x];
 				}
 			}

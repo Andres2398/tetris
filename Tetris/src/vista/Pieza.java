@@ -1,5 +1,7 @@
 package vista;
-
+/**
+ * Clase enum con todas las posibles piezas del juego
+ */
 public enum Pieza {
 	    PIEZAT("./img/PiezasTetris/PiezaT.png",
 	    		new boolean[][] {
@@ -56,18 +58,28 @@ public enum Pieza {
 	private final Imagen imagen;
 	
 	private final boolean[][] forma;
-
+	/**
+	 * Constructor de Pieza 
+	 * @param ruta de la imagen de cada pieza 
+	 * @param forma matriz de boolean con la forma de cada pieza
+	 */
 	Pieza(String ruta, boolean[][] forma) {
 		this.imagen =  new Imagen(ruta);
 		imagen.cerrar();
 		this.forma = forma;
 	}
-
+	/**
+	 * Metodo para obtener la imagen 
+	 * @return imagen de la pieza
+	 */
 	public Imagen getImagen() {
 		
 		return imagen;
 	}
-
+	/**
+	 * metodo para obtener la matriz de boolean 
+	 * @return matriz de boolean 
+	 */
 	public boolean[][] getForma() {
 		return forma;
 	}
